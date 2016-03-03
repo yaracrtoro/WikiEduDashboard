@@ -40,3 +40,4 @@ developmentcp.rb
 npm-debug.log
 .DS_Store
 Session.vim
+.vagrant
