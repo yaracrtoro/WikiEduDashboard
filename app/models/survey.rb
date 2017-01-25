@@ -47,7 +47,7 @@ class Survey < ActiveRecord::Base
     CSV.generate do |csv|
       csv << csv_header
       respondents.each do |respondent|
-        meta_data = [respondent.username, course_for(respondent), response_timestamp(respondent)]
+        meta_data = [respondent.username, course_for(respondent), response_timestamp(respondent), course_join_date(respondent), trainings_completed_prior(respondent)]
         response_row = meta_data + response(respondent)
         csv << response_row
       end
@@ -70,7 +70,7 @@ class Survey < ActiveRecord::Base
       column_name += '_followup' if question_hash[:followup]
       column_name
     end
-    %w(username course response_timestamp) + question_headers
+    %w(username course response_timestamp course_join_date trainings_completed_before_survey_response) + question_headers
   end
 
   def response(user)
@@ -91,12 +91,25 @@ class Survey < ActiveRecord::Base
     notification&.course_id ? Course.find(notification.course_id).slug : user.courses.last&.slug
   end
 
+  def course_join_date(user)
+    @survey_assignment_ids ||= SurveyAssignment.where(survey_id: id).pluck(:id)
+    notification = user.survey_notifications
+                       .where(survey_assignment_id: @survey_assignment_ids)
+                       .first
+    # If there's no course from a notification, fall back to the user's latest course
+    notification&.courses_users_id ? notification.courses_user&.created_at : nil
+  end
+
   def response_timestamp(user)
     answer_record = Rapidfire::AnswerGroup.find_by(
       question_group_id: rapidfire_question_groups.pluck(:id),
       user_id: user.id
     )
     answer_record.created_at
+  end
+
+  def trainings_completed_prior(respondent)
+    TrainingModulesUsers.where(user_id: respondent.id).where.not(completed_at: nil).where('completed_at < ?', response_timestamp(respondent)).count
   end
 
   def question_groups_in_order
