@@ -326,6 +326,24 @@ describe AssignmentsController do
         expect(Assignment.last.article_title).to eq('MY_ARTICLE')
       end
     end
+
+    context 'when the title is an emoji' do
+      let(:emoji_title) { '🗽' }
+      let(:emoji_assignment_params) do
+        { user_id: user.id, course_id: course.slug, title: emoji_title, role: 0 }
+      end
+      before do
+        VCR.use_cassette 'assignment_import' do
+          expect_any_instance_of(WikiCourseEdits).to receive(:update_assignments)
+          expect_any_instance_of(WikiCourseEdits).to receive(:update_course)
+          put :create, params: emoji_assignment_params
+        end
+      end
+      it 'creates the assignment and article records' do
+        expect(Assignment.last.article_title).to eq(emoji_title)
+        expect(Article.last.title).to eq(emoji_title)
+      end
+    end
   end
 
   describe 'PATCH #update' do

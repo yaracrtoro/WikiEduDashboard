@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180222220757) do
+ActiveRecord::Schema.define(version: 20180228211100) do
 
   create_table "alerts", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer "course_id"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 20180222220757) do
   end
 
   create_table "articles", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
-    t.string "title"
+    t.string "title", collation: "utf8mb4_unicode_ci"
     t.datetime "updated_at"
     t.datetime "created_at"
     t.date "views_updated_at"
@@ -48,7 +48,7 @@ ActiveRecord::Schema.define(version: 20180222220757) do
     t.integer "wiki_id"
     t.integer "mw_page_id"
     t.index ["mw_page_id"], name: "index_articles_on_mw_page_id"
-    t.index ["namespace", "wiki_id", "title"], name: "index_articles_on_namespace_and_wiki_id_and_title"
+    t.index ["namespace", "wiki_id", "title"], name: "index_articles_on_namespace_and_wiki_id_and_title", length: { title: 191 }
   end
 
   create_table "articles_courses", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -75,7 +75,7 @@ ActiveRecord::Schema.define(version: 20180222220757) do
   create_table "assignments", id: :integer, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "article_title"
+    t.string "article_title", collation: "utf8mb4_unicode_ci"
     t.integer "user_id"
     t.integer "course_id"
     t.integer "article_id"
