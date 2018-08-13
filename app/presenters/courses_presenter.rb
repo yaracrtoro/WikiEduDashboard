@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_dependency "#{Rails.root}/lib/word_count"
 require_dependency "#{Rails.root}/lib/analytics/histogram_plotter"
 
 #= Presenter for courses / campaign view

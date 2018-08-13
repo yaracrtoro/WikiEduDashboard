@@ -76,6 +76,7 @@ gem 'chartkick' # Used for plots in Rails views
 ### System utilities
 gem 'pandoc-ruby' # Text converter, for markdown<->html<->wikitext conversions
 gem 'rinruby' # R plots!
+gem 'helix-rails' # Rust extensions
 
 ### Platform-specific fixes
 # TZ information is not available on Windows, needs to be installed separately
@@ -125,3 +126,4 @@ group :test do
   gem 'shoulda-matchers'
   gem 'rails-controller-testing'
 end
+gem 'word_count', path: 'crates/word_count'
