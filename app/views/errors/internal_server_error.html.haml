@@ -1,3 +1,7 @@
+- if sentry_event_id = Raven.last_event_id
+  :javascript
+    Raven.showReportDialog({ eventId: '#{sentry_event_id}' });
+
 %body
   %header.main-page
     %h1= Figaro.env.dashboard_title
